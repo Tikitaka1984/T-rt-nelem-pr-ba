@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Történelmi Chatbot</title>
+    
+    <!-- Styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .chat-header {
+            text-align: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            background-color: #f0f2f5;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background-color: #0084ff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0084ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0073e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Beszélgetés Mátyás királlyal</h1>
+            <p>Kérdezz bátran az igazságos Mátyás királytól!</p>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Írd ide a kérdésed...">
+            <button onclick="sendMessage()">Küldés</button>
+        </div>
+    </div>
+
+    <script>
+        // Válasz adatbázis
+        const responses = {
+            greeting: [
+                "Üdvözöllek! Én vagyok Mátyás király. Mit szeretnél tudni az uralkodásomról?",
+                "Köszöntelek az udvarodban! Én vagyok az igazságos Mátyás."
+            ],
+            library: [
+                "A Corvina könyvtáram Európa egyik legnagyobb gyűjteménye volt. Különösen büszke vagyok rá!",
+                "A könyvtáramban több mint 2000 kötet volt, ami abban az időben hatalmas szám volt."
+            ],
+            reform: [
+                "Számos reformot vezettem be, például az igazságszolgáltatás terén és az adózásban.",
+                "A fekete sereg létrehozása az egyik legfontosabb katonai reformom volt."
+            ],
+            default: [
+                "Érdekes kérdés. Az én időmben másképp tekintettünk erre...",
+                "Hadd meséljek erről egy történetet az uralkodásom idejéből..."
+            ]
+        };
+
+        // Kezdő üzenet megjelenítése
+        window.onload = function() {
+            addMessage(responses.greeting[0], 'bot');
+        };
+
+        // Üzenet hozzáadása a chathez
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Válasz generálása a bevitt szöveg alapján
+        function generateResponse(input) {
+            const lowercaseInput = input.toLowerCase();
+            if (lowercaseInput.includes('könyvtár') || lowercaseInput.includes('corvina')) {
+                return responses.library[Math.floor(Math.random() * responses.library.length)];
+            }
+            if (lowercaseInput.includes('reform') || lowercaseInput.includes('változás')) {
+                return responses.reform[Math.floor(Math.random() * responses.reform.length)];
+            }
+            return responses.default[Math.floor(Math.random() * responses.default.length)];
+        }
+
+        // Üzenet küldése
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+
+                // Bot válasz késleltetéssel
+                setTimeout(() => {
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000);
+            }
+        }
+
+        // Enter billentyű kezelése
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</div>
+</body>
+</html>
